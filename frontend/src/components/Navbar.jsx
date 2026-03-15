@@ -3,81 +3,87 @@ import { useState, useEffect } from "react";
 import axios from "../api/axios";
 
 function Navbar({ cart, isLoggedIn, setIsLoggedIn }) {
-  const [wishlistCount, setWishlistCount] = useState(0);
-  useEffect(() => {
-    const fetchWishlist = async () => {
-      try {
-        const userId = localStorage.getItem("userId");
+const [wishlistCount, setWishlistCount] = useState(0);
+const role = localStorage.getItem("role");
 
-        if (!userId) return;
+useEffect(() => {
+const fetchWishlist = async () => {
+try {
+const userId = localStorage.getItem("userId");
 
-        const res = await axios.get(`/api/wishlist?userId=${userId}`);
+if (!userId) return;
 
-        setWishlistCount(res.data.length);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+const res = await axios.get(`/api/wishlist?userId=${userId}`);
 
-    fetchWishlist();
+setWishlistCount(res.data.length);
+ } catch (error) {
+console.log(error);
+ }
+ };
 
-    const interval = setInterval(fetchWishlist, 1000);
+fetchWishlist();
 
-    return () => clearInterval(interval);
-  }, []);
+}, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("userId");
+const handleLogout = () => {
+localStorage.removeItem("isLoggedIn");
+localStorage.removeItem("userId");
+localStorage.removeItem("role");
 
-    setIsLoggedIn(false);
+setIsLoggedIn(false);
 
-    window.location.href = "/";
-  };
+window.location.href = "/";
+ };
 
-  return (
-    <div className="bg-pink-200 text-pink-600 p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
-      <h1 className="text-xl font-bold">Scoopify 🍦</h1>
+return (
+<div className="bg-pink-200 text-pink-600 p-4 flex justify-between items-center sticky top-0 z-50 shadow-md">
+<h1 className="text-xl font-bold">Scoopify 🍦</h1>
 
-      <div className="space-x-6">
-       <Link to="/" className="hover:underline">Home</Link>
-       <Link to="/products" className="hover:underline">Products</Link>
+<div className="space-x-6">
+<Link to="/" className="hover:underline">Home</Link>
+<Link to="/products" className="hover:underline">Products</Link>
 
-        <Link to="/wishlist" className="hover:underline">
-          Wishlist ❤️ ({wishlistCount})
-        </Link>
+<Link to="/wishlist" className="hover:underline">
+ Wishlist ❤️ ({wishlistCount})
+</Link>
 
-        <Link to="/cart" className="hover:underline">
-          Cart ({cart.length})
-        </Link>
+<Link to="/cart" className="hover:underline">
+ Cart ({cart.length})
+</Link>
 
-        <Link to="/orders" className="hover:underline">
-          Recent Orders
-        </Link>
+<Link to="/orders" className="hover:underline">
+ Recent Orders
+</Link>
 
-        {!isLoggedIn && (
-          <Link to="/login" className="hover:underline">
-            Login
-          </Link>
-        )}
+{role === "admin" && (
+<Link to="/admin" className="hover:underline">
+ Admin
+</Link>
+)}
 
-        {!isLoggedIn && (
-          <Link to="/register" className="hover:underline">
-            Register
-          </Link>
-        )}
+{!isLoggedIn && (
+<Link to="/login" className="hover:underline">
+ Login
+</Link>
+ )}
 
-        {isLoggedIn && (
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-2 py-1 rounded"
-          >
-            Logout
-          </button>
-        )}
-      </div>
-    </div>
-  );
+{!isLoggedIn && (
+<Link to="/register" className="hover:underline">
+ Register
+</Link>
+ )}
+
+{isLoggedIn && (
+<button
+onClick={handleLogout}
+className="bg-red-500 text-white px-2 py-1 rounded"
+>
+ Logout
+</button>
+ )}
+</div>
+</div>
+ );
 }
 
 export default Navbar;

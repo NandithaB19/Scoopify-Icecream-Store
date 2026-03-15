@@ -15,20 +15,6 @@ e.preventDefault();
 
 try {
 
-if (email === process.env.ADMIN_EMAIL &&
-  password === process.env.ADMIN_PASSWORD) {
-
-localStorage.setItem("isAdmin", "true");
-localStorage.setItem("isLoggedIn", "true");
-localStorage.setItem("userEmail", email);
-
-setIsLoggedIn(true);
-
-navigate("/admin");
-return;
-
-}
-
 const res = await axios.post("/api/auth/login", {
 email,
 password
@@ -37,10 +23,15 @@ password
 localStorage.setItem("isLoggedIn", "true");
 localStorage.setItem("userEmail", res.data.email);
 localStorage.setItem("userId", res.data._id);
+localStorage.setItem("role", res.data.role);
 
 setIsLoggedIn(true);
 
+if (res.data.role === "admin") {
+navigate("/admin");
+} else {
 navigate("/");
+}
 
 } catch (err) {
 alert("Invalid credentials");

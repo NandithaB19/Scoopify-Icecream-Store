@@ -4,245 +4,242 @@ import { useNavigate } from "react-router-dom";
 
 function Admin() {
 
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
-  const [products, setProducts] = useState([]);
-  const [orders, setOrders] = useState([]);
+const [products, setProducts] = useState([]);
+const [orders, setOrders] = useState([]);
 
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
+const [name, setName] = useState("");
+const [price, setPrice] = useState("");
+const [image, setImage] = useState("");
 
-  const [activeTab, setActiveTab] = useState("products");
+const [activeTab, setActiveTab] = useState("products");
 
-  useEffect(() => {
+useEffect(() => {
 
-    const isAdmin = localStorage.getItem("isAdmin");
+const role = localStorage.getItem("role");
 
-    if (!isAdmin) {
-      navigate("/");
-      return;
-    }
+if (role !== "admin") {
+navigate("/");
+return;
+}
 
-    fetchProducts();
-    fetchOrders();
+fetchProducts();
+fetchOrders();
 
-  }, []);
+}, []);
 
-  const fetchProducts = async () => {
-    try {
-      const res = await axios.get("/api/products");
-      setProducts(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+const fetchProducts = async () => {
+try {
+const res = await axios.get("/api/products");
+setProducts(res.data);
+} catch (error) {
+console.log(error);
+}
+};
 
-  const fetchOrders = () => {
-    const savedOrders = JSON.parse(localStorage.getItem("orders")) || [];
-    setOrders(savedOrders);
-  };
+const fetchOrders = () => {
+const savedOrders = JSON.parse(localStorage.getItem("orders")) || [];
+setOrders(savedOrders);
+};
 
-  const addProduct = async () => {
+const addProduct = async () => {
 
-    if (!name || !price || !image) {
-      alert("Please fill all fields");
-      return;
-    }
+if (!name || !price || !image) {
+alert("Please fill all fields");
+return;
+}
 
-    try {
+try {
 
-      await axios.post("/api/products", {
-        name,
-        basePrice: price,
-        image
-      });
+await axios.post("/api/products", {
+name,
+basePrice: price,
+image
+});
 
-      alert("Product added successfully!");
+alert("Product added successfully!");
 
-      setName("");
-      setPrice("");
-      setImage("");
+setName("");
+setPrice("");
+setImage("");
 
-      fetchProducts();
+fetchProducts();
 
-    } catch (error) {
-      console.log(error);
-    }
-  };
+} catch (error) {
+console.log(error);
+}
+};
 
-  const deleteProduct = async (id) => {
+const deleteProduct = async (id) => {
 
-    try {
+try {
 
-      await axios.delete(`/api/products/${id}`);
+await axios.delete(`/api/products/${id}`);
 
-      fetchProducts();
+fetchProducts();
 
-    } catch (error) {
-      console.log(error);
-    }
-  };
+} catch (error) {
+console.log(error);
+}
+};
 
-  return (
+return (
 
-    <div className="p-6 max-w-6xl mx-auto">
+<div className="p-6 max-w-6xl mx-auto">
 
-      <h1 className="text-3xl font-bold mb-6">
-        Scoopify Admin Panel 🛠️
-      </h1>
+<h1 className="text-3xl font-bold mb-6">
+ Scoopify Admin Panel 🛠️
+</h1>
 
-      <div className="flex gap-4 mb-6">
+<div className="flex gap-4 mb-6">
 
-        <button
-          onClick={() => setActiveTab("products")}
-          className="bg-pink-500 text-white px-4 py-2 rounded"
-        >
-          Manage Products
-        </button>
+<button
+onClick={() => setActiveTab("products")}
+className="bg-pink-500 text-white px-4 py-2 rounded"
+>
+ Manage Products
+</button>
 
-        <button
-          onClick={() => setActiveTab("add")}
-          className="bg-pink-500 text-white px-4 py-2 rounded"
-        >
-          Add Product
-        </button>
+<button
+onClick={() => setActiveTab("add")}
+className="bg-pink-500 text-white px-4 py-2 rounded"
+>
+ Add Product
+</button>
 
-        <button
-          onClick={() => setActiveTab("orders")}
-          className="bg-pink-500 text-white px-4 py-2 rounded"
-        >
-          View Orders
-        </button>
+<button
+onClick={() => setActiveTab("orders")}
+className="bg-pink-500 text-white px-4 py-2 rounded"
+>
+ View Orders
+</button>
 
-      </div>
+</div>
 
+{activeTab === "add" && (
 
-      {activeTab === "add" && (
+<div className="bg-white p-6 rounded-xl shadow max-w-md">
 
-        <div className="bg-white p-6 rounded-xl shadow max-w-md">
+<h2 className="text-xl font-semibold mb-4">
+ Add New Ice Cream
+</h2>
 
-          <h2 className="text-xl font-semibold mb-4">
-            Add New Ice Cream
-          </h2>
+<input
+type="text"
+placeholder="Product Name"
+className="border p-2 w-full mb-3"
+value={name}
+onChange={(e) => setName(e.target.value)}
+/>
 
-          <input
-            type="text"
-            placeholder="Product Name"
-            className="border p-2 w-full mb-3"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+<input
+type="number"
+placeholder="Price"
+className="border p-2 w-full mb-3"
+value={price}
+onChange={(e) => setPrice(e.target.value)}
+/>
 
-          <input
-            type="number"
-            placeholder="Price"
-            className="border p-2 w-full mb-3"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-          />
+<input
+type="text"
+placeholder="Image URL"
+className="border p-2 w-full mb-3"
+value={image}
+onChange={(e) => setImage(e.target.value)}
+/>
 
-          <input
-            type="text"
-            placeholder="Image URL"
-            className="border p-2 w-full mb-3"
-            value={image}
-            onChange={(e) => setImage(e.target.value)}
-          />
+<button
+onClick={addProduct}
+className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600"
+>
+ Add Product
+</button>
 
-          <button
-            onClick={addProduct}
-            className="bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600"
-          >
-            Add Product
-          </button>
+</div>
 
-        </div>
+)}
 
-      )}
+{activeTab === "products" && (
 
+<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-      {activeTab === "products" && (
+{products.map((product) => (
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div
+key={product._id}
+className="bg-white p-4 rounded-xl shadow"
+>
 
-          {products.map((product) => (
+<img
+src={product.image}
+alt={product.name}
+className="w-full h-40 object-cover rounded-lg"
+/>
 
-            <div
-              key={product._id}
-              className="bg-white p-4 rounded-xl shadow"
-            >
+<h2 className="text-lg font-semibold mt-2">
+{product.name}
+</h2>
 
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-40 object-cover rounded-lg"
-              />
+<p>₹ {product.basePrice}</p>
 
-              <h2 className="text-lg font-semibold mt-2">
-                {product.name}
-              </h2>
+<button
+onClick={() => deleteProduct(product._id)}
+className="mt-3 border border-red-500 text-red-500 px-3 py-1 rounded hover:bg-red-50"
+>
+ Delete
+</button>
 
-              <p>₹ {product.basePrice}</p>
+</div>
 
-              <button
-                onClick={() => deleteProduct(product._id)}
-                className="mt-3 border border-red-500 text-red-500 px-3 py-1 rounded hover:bg-red-50"
-              >
-                Delete
-              </button>
+))}
 
-            </div>
+</div>
 
-          ))}
+)}
 
-        </div>
+{activeTab === "orders" && (
 
-      )}
+<div className="space-y-4">
 
+{orders.length === 0 && <p>No orders yet.</p>}
 
-      {activeTab === "orders" && (
+{orders.map((order, index) => (
 
-        <div className="space-y-4">
+<div
+key={index}
+className="bg-white p-4 rounded-xl shadow"
+>
 
-          {orders.length === 0 && <p>No orders yet.</p>}
+<p className="font-semibold">
+ Order Date: {order.date}
+</p>
 
-          {orders.map((order, index) => (
+<p>Email: {order.email}</p>
 
-            <div
-              key={index}
-              className="bg-white p-4 rounded-xl shadow"
-            >
+<p>Total: ₹ {order.total}</p>
 
-              <p className="font-semibold">
-                Order Date: {order.date}
-              </p>
+<p className="mt-2 font-medium">
+ Items:
+</p>
 
-              <p>Email: {order.email}</p>
+{order.items.map((item, i) => (
+<p key={i}>
+{item.name} × {item.quantity}
+</p>
+))}
 
-              <p>Total: ₹ {order.total}</p>
+</div>
 
-              <p className="mt-2 font-medium">
-                Items:
-              </p>
+))}
 
-              {order.items.map((item, i) => (
-                <p key={i}>
-                  {item.name} × {item.quantity}
-                </p>
-              ))}
+</div>
 
-            </div>
+)}
 
-          ))}
+</div>
 
-        </div>
-
-      )}
-
-    </div>
-
-  );
+);
 }
 
 export default Admin;
