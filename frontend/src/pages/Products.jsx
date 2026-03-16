@@ -88,7 +88,7 @@ function Products({ addToCart }) {
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {products.map((product) => (
+        {products?.map((product) => (
           <div
             key={product._id}
             className="bg-white p-6 rounded-2xl shadow-lg hover:scale-105 transition duration-300"
@@ -104,7 +104,7 @@ function Products({ addToCart }) {
 
             <p className="mt-2 font-medium">Toppings:</p>
 
-            {product.toppings.map((topping) => (
+            {product.toppings?.map((topping) => (
               <label key={topping._id} className="block">
                 <input
                   type="checkbox"
