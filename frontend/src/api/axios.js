@@ -1,7 +1,7 @@
-import axios from "axios";
+dimport axios from "axios";
 
 const instance = axios.create({
-  baseURL: "http://localhost:3000", 
+  baseURL: "https://scoopify-icecream-store.onrender.com", 
 });
 
 export default instance;
