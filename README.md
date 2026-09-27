@@ -13,4 +13,4 @@ The application also includes an Admin Panel where administrators can:
 - Manage or delete products
 - View customer orders
 
-Built using React + Tailwind CSS with a Node.js, Express, and MongoDB backend.
+Built using React + Tailwind CSS with a Node.js, Express, and MongoDB backend (MERN Stack).
